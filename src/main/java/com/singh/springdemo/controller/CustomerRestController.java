@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.singh.springdemo.entity.Customer;
+import com.singh.springdemo.exception.CustomerNotFoundException;
 import com.singh.springdemo.service.CustomerService;
 
 @RestController
@@ -26,7 +26,11 @@ public class CustomerRestController {
 	
 	@GetMapping("/customers/{customerId}")
 	public Customer getCustomer(@PathVariable int customerId) {
-		return customerService.getCustomer(customerId);
+		Customer customer = customerService.getCustomer(customerId);
+		if (customer == null) {
+			throw new CustomerNotFoundException("Customer not found with id: " + customerId);
+		}
+		return customer;
 	}
 
 }
